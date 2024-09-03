@@ -1,0 +1,71 @@
+.register-container {
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+  
+  .register-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .register-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    margin-bottom: 5px;
+    display: block;
+    font-weight: bold;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .birthdate-group {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .birthdate-select {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+  }
+  
+  .birthdate-select label {
+    margin-bottom: 5px;
+  }
+  
+  .birthdate-select select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .register-button {
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .register-button:hover {
+    background-color: #4cae4c;
+  }

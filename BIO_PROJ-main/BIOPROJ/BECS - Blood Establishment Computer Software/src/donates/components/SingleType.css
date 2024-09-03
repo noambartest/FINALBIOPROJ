@@ -1,0 +1,49 @@
+.blood-item {
+    margin: 1rem;
+    width: calc(45% - 2rem);
+    min-width: 17.5rem;
+  }
+  
+  .blood-item a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    padding: 1rem;
+    color: rgb(178, 36, 36);
+    background: #292929;
+  }
+  
+  .blood-item a:hover,
+  .blood-item a:active {
+    background: #1e1c12;
+  }
+  
+  .blood-item__content {
+    padding: 0;
+  }
+  
+  .blood-item__image {
+    width: 4rem;
+    height: 4rem;
+    margin-right: 1rem;
+  }
+  
+  .blood-item__info h2 {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: normal;
+    color: #1b190f;
+  }
+  
+  .blood-item:hover h2,
+  .blood-item:active h2,
+  .blood-item:hover h3,
+  .blood-item:active h3 {
+    color: #292929;
+  }
+  
+  .blood-item__info h3 {
+    margin: 0;
+  }

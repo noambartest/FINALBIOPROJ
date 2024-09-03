@@ -1,0 +1,58 @@
+.donate-item {
+    list-style: none;
+    margin: 1rem 0;
+    padding: 0;
+  }
+  
+  .donate-item__content {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    padding: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .donate-item__content:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  .donate-item__info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .donate-item__btype {
+    font-size: 1.5rem;
+    color: #00796b;
+    margin-bottom: 0.5rem;
+  }
+  
+  .donate-item__date,
+  .donate-item__id,
+  .donate-item__care,
+  .donate-item__mental-health,
+  .donate-item__credit-card {
+    font-size: 1rem;
+    color: #333;
+    margin: 0.2rem 0;
+  }
+  
+  .donate-item__date::before,
+  .donate-item__id::before,
+  .donate-item__care::before,
+  .donate-item__mental-health::before,
+  .donate-item__credit-card::before {
+    content: "•";
+    color: #00796b;
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+  
+  .donate-item__credit-card {
+    font-weight: bold;
+    color: #d32f2f;
+  }

@@ -1,0 +1,36 @@
+.card {
+  position: relative;
+  margin: 10px;
+  border-radius: 10px;
+  padding: 20px;
+  overflow: hidden;
+  background: #f7f7f7; /* Light background color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.2s, box-shadow 0.2s; /* Smooth transitions */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card h2 {
+  font-size: 1.5rem;
+  color: #333; /* Dark text color */
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #666; /* Medium text color */
+}
+
+.card a {
+  font-size: 1rem;
+  color: #007bff; /* Link color */
+  text-decoration: none;
+}
+
+.card a:hover {
+  text-decoration: underline;
+}

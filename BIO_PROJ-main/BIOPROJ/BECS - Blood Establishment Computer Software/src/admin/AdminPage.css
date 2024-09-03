@@ -1,0 +1,86 @@
+/* AdminPage.css */
+
+.admin-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+    background-color: #f0f4f8;
+    min-height: 100vh;
+  }
+  
+  .admin-header {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    color: #343a40;
+    font-weight: bold;
+  }
+  
+  .dropdown-container {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .dropdown-label {
+    font-size: 1.2em;
+    margin-right: 10px;
+  }
+  
+  .styled-select {
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    color: #495057;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 200px;
+  }
+  
+  .styled-select:hover {
+    border-color: #80bdff;
+    box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+  }
+  
+  .user-details {
+    text-align: left;
+    margin-top: 20px;
+  }
+  
+  .user-details h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #343a40;
+  }
+  
+  #roleSelect {
+    padding: 5px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    color: #495057;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 200px;
+  }
+  
+  .save-button {
+    margin-top: 20px;
+    padding: 5px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+  }
+  
+  .save-button:hover {
+    background-color: #0056b3;
+  }
