@@ -194,28 +194,16 @@ const login = async (req, res, next) => {
 
 // Get user by ID
 const getUserById = async (req, res, next) => {
-  const userId = req.params.uid;
-
-  let user;
-  try {
-    user = await User.findById(userId, "-password"); // Exclude password field
+  console.log(req.params.id);
+ try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
   } catch (err) {
-    const error = new HttpError(
-      "Something went wrong, could not find a user.",
-      500
-    );
-    return next(error);
+    res.status(500).json({ message: 'Failed to fetch user data', error: err.message });
   }
-
-  if (!user) {
-    const error = new HttpError(
-      "Could not find a user for the provided id.",
-      404
-    );
-    return next(error);
-  }
-
-  res.json({ user: user.toObject({ getters: true }) });
 };
 
 const getAllUsers = async (req, res, next) => {

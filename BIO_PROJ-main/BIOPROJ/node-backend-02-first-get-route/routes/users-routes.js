@@ -15,6 +15,8 @@ router.post("/signup", controller.signup);
 
 router.patch("/updateRole", controller.updateRole);
 
+router.get("/:id", controller.getUserById);
+
 module.exports = router;
 
 
