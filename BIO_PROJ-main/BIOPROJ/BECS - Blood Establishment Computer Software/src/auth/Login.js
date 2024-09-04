@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const Login = ({ onLogin , onRoleChange}) => {
+const Login = ({ onLogin, onRoleChange }) => {
   console.log("login");
   const [ID, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -23,16 +23,17 @@ const Login = ({ onLogin , onRoleChange}) => {
       });
 
       const responseData = await response.json();
-      console.log(response);
-
+      console.log("-------------------------------------------------------");
+      console.log(responseData);
+      console.log("-------------------------------------------------------");
       if (responseData.message === "OK") {
-        onLogin();
+        onLogin(responseData.userId);
         onRoleChange(responseData.role);
         console.log("OG");
-        history.push('/');
-      } else if(response.status === 341)
-         {setError("pending mode, ask your system manager update your role.");}
-         else{
+        history.push("/");
+      } else if (response.status === 341) {
+        setError("pending mode, ask your system manager update your role.");
+      } else {
         setError("Wrong credentials"); // Set error message when credentials are wrong
       }
     } catch (err) {}

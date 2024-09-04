@@ -3,6 +3,12 @@ const HttpError = require("../models/http-error");
 const logActivity = require("../models/audit");
 const { jsPDF } = require("jspdf");
 const { create } = require("xmlbuilder");
+const { spawn } = require('child_process');
+const path = require('path'); 
+const bcrypt = require("bcryptjs");
+const User = require("../models/User");
+
+
 
 const getDonatesByBloodType = async (req, res, next) => {
   const btype = req.params.btype;
@@ -73,6 +79,7 @@ const createDonate = async (req, res, next) => {
     health_fund
   } = req.body;
 
+  // Create a new donation object
   const newDonation = new Donate({
     fullName,
     btype,
@@ -91,15 +98,204 @@ const createDonate = async (req, res, next) => {
     mentalHealthCondition,
     careProvided,
     creditCard,
+    health_fund,
   });
-console.log(newDonation);
+
   try {
+    // Save the new donation to the database
     await newDonation.save();
-    res.status(201).json({ message: "Donation created successfully!" });
+
+    // Simulate AI features based on donation information
+    const aiFeatures = simulateAIFeatures(newDonation);
+    console.log("Simulated AI features:", aiFeatures);
+
+    // Path to the Python executable
+    const pythonExecutable = path.join(__dirname, '..', 'new_env', 'Scripts', 'python');
+
+    // Path to the Python script
+    const pythonScriptPath = path.join(__dirname, '..', 'AIHeartModel', 'predict.py');
+    console.log("Python script path:", pythonScriptPath);
+
+    // Spawn a new Python process to run the AI model
+    const python = spawn(pythonExecutable, [pythonScriptPath, JSON.stringify(aiFeatures)]);
+
+    let predictionResult = '';
+
+    python.stdout.on('data', (data) => {
+      predictionResult += data.toString();
+      console.log(`Python stdout: ${data}`);
+    });
+
+    python.stderr.on('data', (data) => {
+      console.error(`Python stderr: ${data}`);
+      return res.status(500).json({ message: "Failed to run AI model.", error: data.toString() });
+    });
+
+    python.on('close', async (code) => {
+      if (code !== 0) {
+        return res.status(500).json({ message: "Failed to run AI model." });
+      }
+
+      const prediction = parseFloat(predictionResult.trim());
+
+    if (isNaN(prediction)) {
+      console.error('Invalid prediction result:', predictionResult);
+      return res.status(500).json({ message: "Invalid prediction result from AI model." });
+    }
+
+    // Map prediction to results (same mapping used in the Python script)
+    const predictionMap = {
+      '0': "No heart disease detected.",
+      '1': "Mild heart disease detected. Please consult a healthcare provider for further evaluation.",
+      '2': "Moderate heart disease detected. Medical consultation is recommended.",
+      '3': "Severe heart disease detected. Immediate medical attention is advised.",
+      '4': "Very severe heart disease detected. Urgent medical intervention is necessary."
+    };
+
+      const resultMessage = predictionMap[prediction];
+
+      // Save AI results to the donation
+      newDonation.aiResults = {
+        prediction: parseInt(prediction),
+        message: resultMessage
+      };
+
+      try {
+        await newDonation.save();
+      } catch (err) {
+        return res.status(500).json({ message: "Failed to save AI results.", error: err.message });
+      }
+
+      // Create a new donator user with hashed password
+      const hashedPassword = await bcrypt.hash(donatorID, 12); // Default password can be updated as needed
+
+      const donatorUser = new User({
+        username: donatorID,  // Using donatorID as username for simplicity
+        password: hashedPassword,
+        name: fullName,
+        birth_date: birthDate,
+        ID: donatorID,
+        role: 'donator',
+        isApproved: true,
+        aiFeatures: aiFeatures,
+        aiResults: {
+          prediction: parseInt(prediction),
+          message: resultMessage
+        }
+      });
+      console.log("creating new user");
+      try {
+        await donatorUser.save();
+        console.log("User saved successfully");
+        res.status(201).json({ message: "Donation and user created successfully!", aiResults: newDonation.aiResults });
+      } catch (err) {
+        console.error("Error saving user:", err);  // Log the specific error
+        res.status(500).json({ message: "Failed to create donator user.", error: err.message });
+      }
+    });
+    console.log("saving new user");
+
+
   } catch (error) {
     res.status(500).json({ message: "Failed to create donation.", error: error.message });
   }
 };
+
+
+// Example function to simulate AI features based on donor info
+const simulateAIFeatures = (donation) => {
+  console.log(donation.birthDate);
+  const age = calculateAge(donation.birthDate);
+
+  const sex = determineSex(donation.fullName); // Example logic based on name
+  const cp = determineChestPainType(donation.mentalHealthCondition);
+  const trestbps = simulateRestingBloodPressure(age);
+  console.log("i am here");
+
+  const chol = simulateCholesterol(age, donation.health_fund);
+  const fbs = simulateFastingBloodSugar(donation.health_fund);
+  const restecg = simulateECGResults();
+  const thalach = simulateMaxHeartRate(age);
+  const exang = simulateExerciseInducedAngina(age, donation.mentalHealthCondition);
+
+
+  return {
+    age,
+    sex,
+    cp,
+    trestbps,
+    chol,
+    fbs,
+    restecg,
+    thalach,
+    exang
+  };
+};
+
+// Helper function to determine sex based on name (example, not reliable)
+const determineSex = (fullName) => {
+  // This is just a placeholder. In a real scenario, you would have more reliable data.
+  return fullName.toLowerCase().endsWith('a') ? 0 : 1; // Assume names ending with 'a' are female
+};
+
+// Example logic to determine chest pain type
+const determineChestPainType = (mentalHealthCondition) => {
+  if (mentalHealthCondition.toLowerCase().includes('stress')) {
+    return 2; // non-anginal pain
+  }
+  return 3; // asymptomatic
+};
+
+// Simulate resting blood pressure based on age
+const simulateRestingBloodPressure = (age) => {
+  if (age < 30) return 110;
+  if (age < 50) return 120;
+  return 140;
+};
+
+// Simulate cholesterol based on age and health fund
+const simulateCholesterol = (age, healthFund) => {
+  if (healthFund === 'Aetna') return 180;
+  return age < 40 ? 200 : 240;
+};
+
+// Simulate fasting blood sugar based on health fund
+const simulateFastingBloodSugar = (healthFund) => {
+  return healthFund === 'Aetna' ? 1 : 0;
+};
+
+// Simulate ECG results (random example)
+const simulateECGResults = () => {
+  return Math.random() > 0.5 ? 0 : 1;
+};
+
+// Simulate maximum heart rate achieved based on age
+const simulateMaxHeartRate = (age) => {
+  return 220 - age; // Simplified formula for max heart rate
+};
+
+// Simulate exercise-induced angina based on age and mental health condition
+const simulateExerciseInducedAngina = (age, mentalHealthCondition) => {
+  if (mentalHealthCondition.toLowerCase().includes('anxiety') && age > 50) {
+    return 1;
+  }
+  return 0;
+};
+
+const calculateAge = (birthDate) => {
+  const today = new Date();
+  const birthYear = parseInt(birthDate.year, 10);
+  const birthMonth = parseInt(birthDate.month, 10) - 1;
+  const birthDay = parseInt(birthDate.day, 10);
+  const birth = new Date(birthYear, birthMonth, birthDay);
+  let age = today.getFullYear() - birth.getFullYear();
+  const monthDiff = today.getMonth() - birth.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  return age;
+};
+
 
 const updateDonate = async (req, res, next) => {
   const donateId = req.params.donateId;

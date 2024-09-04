@@ -10,6 +10,7 @@ import "./NewDonate.css";
 
 
 const NewDonate = (props) => {
+  console.log("response");
   const history = useHistory();
 
   const initForm = {
@@ -142,7 +143,10 @@ const NewDonate = (props) => {
           health_fund: formData.health_fund,
         }),
       });
+      console.log("somthing");
+      console.log(response);
       if (response.ok) {
+        console.log(response);
         history.push('/');      }
     } catch (error) {
       console.error("Error submitting donation:", error);

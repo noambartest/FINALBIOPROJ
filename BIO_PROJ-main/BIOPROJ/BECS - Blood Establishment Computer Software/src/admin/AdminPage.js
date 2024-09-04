@@ -7,7 +7,7 @@ const AdminPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedRole, setSelectedRole] = useState("");
 
-  const roles = ["admin", "user", "student"];
+  const roles = ["admin", "user", "student", "donator"];
 
   useEffect(() => {
     const fetchUsers = async () => {

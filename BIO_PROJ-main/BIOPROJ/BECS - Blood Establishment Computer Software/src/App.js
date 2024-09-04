@@ -4,7 +4,8 @@ import {
   Route,
   Redirect,
   Switch,
-} from "react-router-dom/cjs/react-router-dom.min";
+} 
+from "react-router-dom/cjs/react-router-dom.min";
 import BloodsTypes from "./donates/pages/BloodsTypes";
 import NewDonate from "./donates/pages/NewDonate";
 import MainNavigation from "./shared/Navigation/MainNavigation";
@@ -15,23 +16,35 @@ import Login from "./auth/Login"; // Import the Login component
 import AdminPage from "./admin/AdminPage";
 import Register from "./auth/Register";
 import Logout from "./donates/pages/Logout";
+import InfoPage from "./donator_pannel/pages/info_page";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [role, setRole] = useState("");
+  const [userID, setUserID] = useState("");
   console.log(isAuthenticated);
 
-  const loginHandler = () => {
+  const loginHandler = (userid) => {
     setIsAuthenticated(true);
+    setUserID(userid);
+    console.log(userid);
   };
 
   const logOutHandler = () => {
+    console.log("logOUT");
+
     setIsAuthenticated(false);
   };
 
   const roleHandler = (role) => {
     setRole(role);
+    console.log(role);
   };
+
+  if(role === "donator")
+  {
+    return <InfoPage logOut={logOutHandler} id={userID}  />;
+  }
 
   return (
     <Router>
