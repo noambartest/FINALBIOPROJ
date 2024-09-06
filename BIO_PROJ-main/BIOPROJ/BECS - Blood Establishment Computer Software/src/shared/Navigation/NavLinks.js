@@ -1,6 +1,5 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-
 import "./NavLinks.css";
 
 const NavLinks = (props) => {
@@ -17,6 +16,14 @@ const NavLinks = (props) => {
           <li>
             <NavLink to="/register" exact>
               Register
+            </NavLink>
+          </li>
+        </>
+      ) : props.role === "donator" ? (  // Check if the role is donator
+        <>
+          <li>
+            <NavLink to={`/InfoPage/${props.userID}`} exact>
+              Donator Panel
             </NavLink>
           </li>
         </>

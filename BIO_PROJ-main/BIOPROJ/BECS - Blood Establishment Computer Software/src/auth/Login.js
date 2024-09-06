@@ -29,8 +29,15 @@ const Login = ({ onLogin, onRoleChange }) => {
       if (responseData.message === "OK") {
         onLogin(responseData.userId);
         onRoleChange(responseData.role);
-        console.log("OG");
-        history.push("/");
+        console.log("OGG");
+        if(responseData.role === 'donator')
+        {
+            history.push("/InfoPage");
+        }
+        else
+        {
+          history.push("/");
+        }
       } else if (response.status === 341) {
         setError("pending mode, ask your system manager update your role.");
       } else {

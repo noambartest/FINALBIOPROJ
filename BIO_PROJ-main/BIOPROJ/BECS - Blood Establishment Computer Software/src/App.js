@@ -4,8 +4,7 @@ import {
   Route,
   Redirect,
   Switch,
-} 
-from "react-router-dom/cjs/react-router-dom.min";
+} from "react-router-dom/cjs/react-router-dom.min";
 import BloodsTypes from "./donates/pages/BloodsTypes";
 import NewDonate from "./donates/pages/NewDonate";
 import MainNavigation from "./shared/Navigation/MainNavigation";
@@ -32,7 +31,7 @@ const App = () => {
 
   const logOutHandler = () => {
     console.log("logOUT");
-
+    setRole('');
     setIsAuthenticated(false);
   };
 
@@ -41,14 +40,16 @@ const App = () => {
     console.log(role);
   };
 
-  if(role === "donator")
-  {
-    return <InfoPage logOut={logOutHandler} id={userID}  />;
-  }
-
   return (
     <Router>
-      <MainNavigation role={role} isAuthenticated={isAuthenticated} />
+      {/* Show the MainNavigation only if the user is NOT a donator */}
+      {role !== "donator" && (
+        <MainNavigation
+          role={role}
+          isAuthenticated={isAuthenticated}
+          userID={userID}
+        />
+      )}
       <main>
         <Switch>
           {!isAuthenticated ? (
@@ -62,28 +63,35 @@ const App = () => {
             </>
           ) : (
             <>
-              <Route path="/" exact>
-                <BloodsTypes role={role} />
-              </Route>
-              <Route path="/:bloodtype/donations" exact>
-                <DonationList role={role} />
-              </Route>
-              <Route path="/donates/newDonation" exact>
-                <NewDonate role={role} />
-              </Route>
-              <Route path="/donates/newDelivery" exact>
-                <NewDe role={role} />
-              </Route>
-              <Route path="/emgc" exact>
-                <Emergency role={role} />
-              </Route>
-              <Route path="/admin/pannel" exact>
-                <AdminPage />
-              </Route>
-              <Route path="/logout" exact>
-                <Logout logOut={logOutHandler} /> // Ensure the prop name is
-                logOut
-              </Route>
+              {role === "donator" ? (
+                <Route path="/InfoPage/" exact>
+                  <InfoPage logOut={logOutHandler} id={userID} />
+                </Route>
+              ) : (
+                <>
+                  <Route path="/" exact>
+                    <BloodsTypes role={role} />
+                  </Route>
+                  <Route path="/:bloodtype/donations" exact>
+                    <DonationList role={role} />
+                  </Route>
+                  <Route path="/donates/newDonation" exact>
+                    <NewDonate role={role} />
+                  </Route>
+                  <Route path="/donates/newDelivery" exact>
+                    <NewDe role={role} />
+                  </Route>
+                  <Route path="/emgc" exact>
+                    <Emergency role={role} />
+                  </Route>
+                  <Route path="/admin/pannel" exact>
+                    <AdminPage />
+                  </Route>
+                  <Route path="/logout" exact>
+                    <Logout logOut={logOutHandler} />
+                  </Route>
+                </>
+              )}
             </>
           )}
           <Redirect to="/login" />
